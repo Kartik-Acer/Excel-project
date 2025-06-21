@@ -1,0 +1,15 @@
+body{
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background-color: #f4f4f4;
+}
+
+.dashboard{
+  padding: 50px;
+  text-align: center;
+}
+
+.main-content{
+  min-height: 90vh;
+  padding: 20px;
+}

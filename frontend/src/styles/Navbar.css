@@ -1,0 +1,22 @@
+.navbar{
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  
+}
+.logo{
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.nav-links a, .logout-btn{ 
+  margin-left: 15px;
+  color: white;
+  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
