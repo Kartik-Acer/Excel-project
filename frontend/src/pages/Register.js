@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { register } from "../services/api";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 import "../styles/Form.css";
 
 const Register = () => {
@@ -17,9 +18,9 @@ const Register = () => {
     e.preventDefault();
     try {
       await register(form);
-      alert("Registered successfully!");
+      Swal.fire("Registered successfully!");
     } catch (err) {
-      alert(err.response.data.error);
+      Swal.fire(err.response.data.error);
     }
   };
 
