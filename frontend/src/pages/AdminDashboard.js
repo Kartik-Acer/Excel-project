@@ -46,7 +46,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const toggleUserStatus = async (userId) => {
+  const toggleUserStatus = async (userId, userIsActive) => {
     try {
       await axios.patch(
         `http://localhost:5000/api/users/${userId}`,
@@ -57,7 +57,8 @@ const AdminDashboard = () => {
           },
         }
       );
-      fetchUsers(); // Refresh users list
+      fetchUsers(); //Refresh users
+      Swal.fire(userIsActive ? "User Deactivated" : "User Activated");
     } catch (error) {
       console.log(error);
       Swal.fire("Failed to update user status");
@@ -287,7 +288,9 @@ const AdminDashboard = () => {
                     <td>
                       <div className="user-actions">
                         <button
-                          onClick={() => toggleUserStatus(user._id)}
+                          onClick={() =>
+                            toggleUserStatus(user._id, user.isActive)
+                          }
                           className={`action-btn ${
                             user.isActive ? "deactivate" : "activate"
                           }`}
