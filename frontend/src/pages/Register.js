@@ -1,26 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { register } from "../services/api";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import "../styles/Form.css";
 
 const Register = () => {
-  const [form, setForm] = useState({
+  const initialForm = {
     name: "",
     email: "",
     password: "",
     role: "user",
-  });
+  };
+  const [form, setForm] = useState(initialForm);
+
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
+
+  const clearData = () => {
+    setForm(initialForm);
+    // Clear to an empty object
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await register(form);
+      clearData();
       Swal.fire("Registered successfully!");
     } catch (err) {
-      Swal.fire(err.response.data.error);
+      Swal.fire("Registered Failed");
     }
   };
 
@@ -33,6 +41,7 @@ const Register = () => {
             <label htmlFor="username">Username</label>
             <input
               name="name"
+              value={form.name}
               placeholder="Name"
               onChange={handleChange}
               required
@@ -42,6 +51,7 @@ const Register = () => {
             <label htmlFor="email">Email</label>
             <input
               name="email"
+              value={form.email}
               placeholder="Email"
               onChange={handleChange}
               required
@@ -51,6 +61,7 @@ const Register = () => {
             <label htmlFor="password">Password</label>
             <input
               name="password"
+              value={form.password}
               type="password"
               placeholder="Password"
               onChange={handleChange}

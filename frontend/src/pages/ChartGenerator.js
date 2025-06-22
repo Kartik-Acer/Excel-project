@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -162,10 +163,10 @@ const ChartGenerator = ({ fileId: propFileId }) => {
           },
         }
       );
-      alert("Analysis saved successfully!");
+      Swal.fire("Analysis saved successfully!");
     } catch (error) {
       console.log(error);
-      alert("Failed to save analysis");
+      Swal.fire("Failed to save analysis");
     } finally {
       setSaving(false);
     }
