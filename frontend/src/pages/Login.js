@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { login } from "../services/api";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 import "../styles/Form.css";
 
 const Login = () => {
@@ -24,9 +25,9 @@ const Login = () => {
       );
     } catch (err) {
       if (!err.response) {
-        alert("server is currently unavailable.");
+        Swal.fire("server is currently unavailable.");
       } else {
-        alert(err.response.data.error);
+        Swal.fire(err.response.data.error);
       }
     }
   };
