@@ -83,6 +83,7 @@ const AdminDashboard = () => {
           },
         });
         fetchUsers(); // Refresh users list
+        fetchStats(); // Refresh stats
         Swal.fire("Deleted!", "User has been deleted.", "success");
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         Swal.fire("Cancelled", "User is safe :)", "error");
