@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Line } from "react-chartjs-2";
 import "../styles/AdminDashboard.css";
+import Swal from "sweetalert2";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
@@ -59,26 +60,35 @@ const AdminDashboard = () => {
       fetchUsers(); // Refresh users list
     } catch (error) {
       console.log(error);
-      alert("Failed to update user status");
+      Swal.fire("Failed to update user status");
     }
   };
 
   const deleteUser = async (userId) => {
-    if (
-      window.confirm(
-        "Are you sure you want to delete this user? This action cannot be undone."
-      )
-    ) {
-      try {
+    try {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+      });
+
+      if (result.isConfirmed) {
         await axios.delete(`http://localhost:5000/api/users/${userId}`, {
           headers: {
             Authorization: `${token}`, //sent token for auth
           },
         });
         fetchUsers(); // Refresh users list
-      } catch (error) {
-        alert("Failed to delete user");
+        Swal.fire("Deleted!", "User has been deleted.", "success");
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire("Cancelled", "User is safe :)", "error");
       }
+    } catch (error) {
+      Swal.fire("Error!", "Failed to delete User.", "error");
     }
   };
 
@@ -122,8 +132,6 @@ const AdminDashboard = () => {
     return <div className="loading">Loading admin dashboard...</div>;
   }
 
-  console.log(stats);
-  console.log(users);
   return (
     <div className="admin-dashboard">
       <div className="admin-header">
