@@ -19,13 +19,15 @@ exports.register = async (req, res) => {
 // Login function
 
 exports.login = async (req, res) => {
-  console.log(User);
   const { email, password } = req.body; // Destructure request body
   const user = await User.findOne({ email }); // Find user by email
+
   if (!user) return res.status(400).json({ error: "invalid credentials" });
 
   const isMatch = await bcrypt.compare(password, user.password); //Compare password
   if (!isMatch) return res.status(400).json({ error: "Invalid Credentials" });
+
+  if (!user.isActive) return res.status(400).json({ error: "Access denied" });
 
   const token = jwt.sign(
     { id: user._id, role: user.role },

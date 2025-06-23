@@ -28,7 +28,7 @@ const Register = () => {
       clearData();
       Swal.fire("Registered successfully!");
     } catch (err) {
-      Swal.fire("Registered Failed");
+      Swal.fire(err.response.data.error);
     }
   };
 

@@ -27,7 +27,12 @@ const Login = () => {
       if (!err.response) {
         Swal.fire("server is currently unavailable.");
       } else {
-        Swal.fire(err.response.data.error);
+        Swal.fire({
+          title: err.response.data.error,
+          text: "Please contact your Admin",
+          icon: "warning",
+          button: null,
+        });
       }
     }
   };
