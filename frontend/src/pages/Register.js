@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { register } from "../services/api";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -50,10 +50,12 @@ const Register = () => {
           <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
+              type="email"
               name="email"
               value={form.email}
               placeholder="Email"
               onChange={handleChange}
+              pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$"
               required
             />
           </div>
@@ -65,6 +67,8 @@ const Register = () => {
               type="password"
               placeholder="Password"
               onChange={handleChange}
+              pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+              title="Must contain at least one  number and one uppercase and lowercase letter, and at least 8 or more characters"
               required
             />
           </div>
