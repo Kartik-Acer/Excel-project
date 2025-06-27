@@ -21,7 +21,7 @@ const Dashboard = () => {
   const fetchFiles = async () => {
     console.log("history call");
     try {
-      const response = await axios.get("http://localhost:5000/api/history", {
+      const response = await axios.get("https://excel-project-idom.onrender.com/history", {
         headers: {
           Authorization: `${token}`, //sent token for auth
         },
