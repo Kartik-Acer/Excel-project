@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { statistics, Users, toggleUsers, deleteuser } from "../services/api";
 import { Line } from "react-chartjs-2";
 import "../styles/AdminDashboard.css";
 import Swal from "sweetalert2";
@@ -20,7 +20,7 @@ const AdminDashboard = () => {
   const token = localStorage.getItem("token");
   const fetchStats = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/stats", {
+      const response = await statistics({
         headers: {
           Authorization: `${token}`, //sent token for auth
         },
@@ -33,7 +33,7 @@ const AdminDashboard = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/users", {
+      const response = await Users({
         headers: {
           Authorization: `${token}`, //sent token for auth
         },
@@ -48,8 +48,8 @@ const AdminDashboard = () => {
 
   const toggleUserStatus = async (userId, userIsActive) => {
     try {
-      await axios.patch(
-        `http://localhost:5000/api/users/${userId}`,
+      await toggleUsers(
+        userId,
         {},
         {
           headers: {
@@ -78,7 +78,7 @@ const AdminDashboard = () => {
       });
 
       if (result.isConfirmed) {
-        await axios.delete(`http://localhost:5000/api/users/${userId}`, {
+        await deleteuser(userId, {
           headers: {
             Authorization: `${token}`, //sent token for auth
           },
@@ -90,6 +90,7 @@ const AdminDashboard = () => {
         Swal.fire("Cancelled", "User is safe :)", "error");
       }
     } catch (error) {
+      console.log(error);
       Swal.fire("Error!", "Failed to delete User.", "error");
     }
   };

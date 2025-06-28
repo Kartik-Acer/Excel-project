@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { fileUpload } from "../services/api";
 import "../styles/FileUpload.css";
 
 const FileUpload = ({ onUploadSuccess }) => {
@@ -69,17 +69,13 @@ const FileUpload = ({ onUploadSuccess }) => {
     formData.append("excelFile", file);
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `${token}`, //sent token for auth
-          },
-        }
-      );
-      console.log(response);
+      const response = await fileUpload(formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `${token}`, //sent token for auth
+        },
+      });
+      console.log(onUploadSuccess);
       // Call onUploadSuccess if provided, otherwise navigate
       if (onUploadSuccess) {
         onUploadSuccess(response.data.fileId);

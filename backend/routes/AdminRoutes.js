@@ -6,7 +6,7 @@ const auth = require("../middleware/auth");
 const router = express.Router();
 
 // Get dashboard statistics
-router.get("/stats", auth, async (req, res) => {
+router.get("/statistics", auth, async (req, res) => {
   try {
     const totalUsers = await User.countDocuments({ role: "user" });
     const totalUploads = await FileUpload.countDocuments();
@@ -67,6 +67,7 @@ router.get("/users", auth, async (req, res) => {
 // Toggle user active status
 router.patch("/users/:userId", auth, async (req, res) => {
   try {
+    console.log(req);
     const user = await User.findById(req.params.userId);
 
     if (!user || user.role === "admin") {
@@ -88,6 +89,7 @@ router.patch("/users/:userId", auth, async (req, res) => {
       },
     });
   } catch (error) {
+    console.log(error);
     res
       .status(500)
       .json({ message: "Error updating user", error: error.message });

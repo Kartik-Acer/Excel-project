@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import axios from "axios";
 import "../styles/History.css";
+import { getHistory } from "../services/api";
 
 const History = ({ onSelectFile }) => {
   const [files, setFiles] = useState([]);
@@ -17,7 +17,7 @@ const History = ({ onSelectFile }) => {
   const token = localStorage.getItem("token");
   const fetchFiles = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/history", {
+      const response = await getHistory({
         headers: {
           Authorization: `${token}`, //sent token for auth
         },

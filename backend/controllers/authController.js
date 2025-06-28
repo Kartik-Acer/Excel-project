@@ -1,6 +1,7 @@
 const User = require("../models/user"); // Import User model
 const bcrypt = require("bcryptjs"); // For Hashing password
 const jwt = require("jsonwebtoken"); // For generating JWT tokens
+const nodemailer = require("nodemailer");
 
 // Register Function
 exports.register = async (req, res) => {
@@ -34,4 +35,39 @@ exports.login = async (req, res) => {
     process.env.JWT_SECRET
   ); //Create JWT token
   res.json({ token, role: user.role, name: user.name }); // Respond with token and role
+};
+
+//function forgotpassord
+exports.forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ messege: "Email not registered" });
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "15m",
+    });
+
+    const resetLink = `http://localhost:3000/reset-password/${token}`;
+
+    //configure transporter
+    const transporter = nodemailer.createTransport({
+      service: "Gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    await transporter.sendMail({
+      from: '"Data Canvas" <no-reply@DataCanvas.com>',
+      to: user.email,
+      subject: "Password Reset",
+      html: `<p>Click <a href="${resetLink}">here</a> to reset your password.
+      Link expires in 15 mins.</p>`,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Error sending reset email" });
+  }
 };

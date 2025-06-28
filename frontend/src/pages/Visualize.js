@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
 import "../styles/Visualize.css";
 import ChartGenerator from "./ChartGenerator";
+import { getHistory } from "../services/api";
 
 const Visualize = ({ selectedFileId: propSelectedFileId, onSelectFile }) => {
   const [files, setFiles] = useState([]);
@@ -24,7 +24,7 @@ const Visualize = ({ selectedFileId: propSelectedFileId, onSelectFile }) => {
   const token = localStorage.getItem("token");
   const fetchFiles = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/history", {
+      const response = await getHistory({
         headers: {
           Authorization: `${token}`, //sent token for auth
         },

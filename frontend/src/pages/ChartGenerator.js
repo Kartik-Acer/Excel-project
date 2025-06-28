@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import Swal from "sweetalert2";
 import {
   Chart as ChartJS,
@@ -21,6 +20,7 @@ import ThreeChart from "./ThreeChart";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import "../styles/ChartGenerator.css";
+import { getFileData, storeAnalysis } from "../services/api";
 
 ChartJS.register(
   CategoryScale,
@@ -65,14 +65,11 @@ const ChartGenerator = ({ fileId: propFileId }) => {
   const fetchFileData = async () => {
     try {
       // Now fetching data from database instead of reading file
-      const response = await axios.get(
-        `http://localhost:5000/api/${fileId}/data`,
-        {
-          headers: {
-            Authorization: `${token}`, //sent token for auth
-          },
-        }
-      );
+      const response = await getFileData(fileId, {
+        headers: {
+          Authorization: `${token}`, //sent token for auth
+        },
+      });
       setFileData(response.data);
 
       // Set default axes if available
@@ -149,8 +146,8 @@ const ChartGenerator = ({ fileId: propFileId }) => {
     setSaving(true);
     try {
       console.log(token);
-      await axios.post(
-        `http://localhost:5000/api/${fileId}/analysis`,
+      await storeAnalysis(
+        fileId,
         {
           chartType: chartConfig.type,
           xAxis: chartConfig.xAxis,

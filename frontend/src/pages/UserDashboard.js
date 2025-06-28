@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import FileUpload from "./FileUpload";
 import Visualize from "./Visualize";
 import History from "./History";
 import "../styles/UserDashboard.css";
+import { getHistory, filePreview } from "../services/api";
 
 const Dashboard = () => {
   const [files, setFiles] = useState([]);
@@ -21,7 +21,7 @@ const Dashboard = () => {
   const fetchFiles = async () => {
     console.log("history call");
     try {
-      const response = await axios.get("http://localhost:5000/api/history", {
+      const response = await getHistory({
         headers: {
           Authorization: `${token}`, //sent token for auth
         },
@@ -71,14 +71,11 @@ const Dashboard = () => {
     console.log(token);
     setLoadingPreview(true);
     try {
-      const response = await axios.get(
-        `http://localhost:5000/api/${fileId}/preview`,
-        {
-          headers: {
-            Authorization: `${token}`, //sent token for auth
-          },
-        }
-      );
+      const response = await filePreview(fileId, {
+        headers: {
+          Authorization: `${token}`, //sent token for auth
+        },
+      });
       setPreviewData(response.data);
     } catch (error) {
       console.error("Failed to fetch file preview:", error);
