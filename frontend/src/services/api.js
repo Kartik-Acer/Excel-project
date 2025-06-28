@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://excel-project-idom.onrender.com",
 });
 
 export const register = (data) => API.post("/register", data);
