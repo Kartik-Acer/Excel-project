@@ -11,6 +11,7 @@ const ForgotPassword = () => {
       setEmail("");
       Swal.fire("Reset link sent to email");
     } catch (err) {
+      console.log(err.response.data.message);
       console.log(err);
       Swal.fire(err.response.data.message);
     }

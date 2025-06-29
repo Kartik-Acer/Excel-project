@@ -49,7 +49,7 @@ exports.forgotPassword = async (req, res) => {
     });
 
     //const resetLink = `https://excel-project-frontend.onrender.com/resetpassword/${token}`;
-    console.log(resetLink);
+
     //configure transporter
     const transporter = nodemailer.createTransport({
       service: "Gmail",
@@ -63,7 +63,7 @@ exports.forgotPassword = async (req, res) => {
       from: '"Data Canvas" <no-reply@DataCanvas.com>',
       to: user.email,
       subject: "Password Reset",
-      html: `<p>Click <a href=reset>here</a> to reset your password.
+      html: `<p>Click <a href=https://google.com>here</a> to reset your password.
       Link expires in 15 mins.</p>`,
     });
     res.status(201).json({ message: "Reset link sent to email" });
