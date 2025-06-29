@@ -8,9 +8,11 @@ const ForgotPassword = () => {
     e.preventDefault();
     try {
       await forgotPassword({ email });
+      setEmail("");
       Swal.fire("Reset link sent to email");
     } catch (err) {
-      Swal.fire(err.response.data.error);
+      console.log(err);
+      Swal.fire(err.response.data.message);
     }
   };
   return (
@@ -21,6 +23,7 @@ const ForgotPassword = () => {
           <div className="form-group">
             <input
               name="email"
+              value={email}
               placeholder="Enter Your Email"
               onChange={(e) => setEmail(e.target.value)}
               pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,4}$"

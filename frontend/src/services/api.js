@@ -1,12 +1,14 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://excel-project-backend-mold.onrender.com/api",
+  baseURL: "http://localhost:5000/api",
 });
 
 export const register = (data) => API.post("/register", data);
 export const login = (data) => API.post("/login", data);
 export const forgotPassword = (data) => API.post("/forgot-password", data);
+export const resetPassword = (token, data) =>
+  API.post(`/reset-password/${token}`, data);
 //AdminDashboard Stats/Users
 export const statistics = (data) => API.get("/statistics", data);
 export const Users = (data) => API.get("/users", data);

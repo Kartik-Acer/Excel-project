@@ -6,7 +6,7 @@ const nodemailer = require("nodemailer");
 // Register Function
 exports.register = async (req, res) => {
   const { name, email, password, role } = req.body; // Destructure request body
-  const hashedPassword = await bcrypt.hash(password, 3); // Encrypt password
+  const hashedPassword = await bcrypt.hash(password, 10); // Encrypt password
 
   try {
     const user = new User({ name, email, password: hashedPassword, role }); // create user obj
@@ -42,14 +42,14 @@ exports.forgotPassword = async (req, res) => {
   const { email } = req.body;
   try {
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ messege: "Email not registered" });
+    if (!user) return res.status(404).json({ message: "Email not registered" });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "15m",
     });
 
-    const resetLink = `http://localhost:3000/reset-password/${token}`;
-
+    const resetLink = `http://localhost:3000/resetpassword/${token}`;
+    console.log(resetLink);
     //configure transporter
     const transporter = nodemailer.createTransport({
       service: "Gmail",
@@ -66,8 +66,25 @@ exports.forgotPassword = async (req, res) => {
       html: `<p>Click <a href="${resetLink}">here</a> to reset your password.
       Link expires in 15 mins.</p>`,
     });
+    res.status(201).json({ message: "Reset link sent to email" });
   } catch (err) {
     console.log(err);
     res.status(500).json({ message: "Error sending reset email" });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { password } = req.body;
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await User.findByIdAndUpdate(decoded.id, { password: hashedPassword });
+
+    res.status(200).json({ message: "password reset successfully" });
+  } catch (err) {
+    res.status(400).json({ message: "Invalid or expired token" });
   }
 };

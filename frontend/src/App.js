@@ -15,6 +15,7 @@ import Footer from "./components/Footer";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   const userRole = localStorage.getItem("role");
@@ -58,6 +59,7 @@ function App() {
           />
           <Route path="/Home" element={<Home />} />
           <Route path="/forgotpassword" element={<ForgotPassword />} />
+          <Route path="/resetpassword/:token" element={<ResetPassword />} />
         </Routes>
       </div>
 
