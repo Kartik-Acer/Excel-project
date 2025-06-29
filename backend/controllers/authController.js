@@ -48,7 +48,7 @@ exports.forgotPassword = async (req, res) => {
       expiresIn: "15m",
     });
 
-    const resetLink = `https://excel-project-frontend.onrender.com/${token}`;
+    const resetLink = `https://excel-project-frontend.onrender.com/resetpassword/${token}`;
     console.log(resetLink);
     //configure transporter
     const transporter = nodemailer.createTransport({
@@ -69,7 +69,7 @@ exports.forgotPassword = async (req, res) => {
     res.status(201).json({ message: "Reset link sent to email" });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: err });
+    res.status(500).json({ message: "Error sending reset email" });
   }
 };
 
