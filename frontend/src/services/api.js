@@ -3,6 +3,8 @@ import axios from "axios";
 const API = axios.create({
   baseURL: "https://excel-project-backend-mold.onrender.com/api",
 });
+//https://excel-project-backend-mold.onrender.com
+//https://excel-project-frontend.onrender.com
 
 export const register = (data) => API.post("/register", data);
 export const login = (data) => API.post("/login", data);

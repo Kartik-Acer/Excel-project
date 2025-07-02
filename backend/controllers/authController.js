@@ -1,7 +1,7 @@
 const User = require("../models/user"); // Import User model
 const bcrypt = require("bcryptjs"); // For Hashing password
 const jwt = require("jsonwebtoken"); // For generating JWT tokens
-const nodemailer = require("nodemailer");
+const sgMail = require("@sendgrid/mail");
 
 // Register Function
 exports.register = async (req, res) => {
@@ -44,36 +44,29 @@ exports.forgotPassword = async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: "Email not registered" });
 
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "15m",
     });
 
     const resetLink = `https://excel-project-frontend.onrender.com/resetpassword/${token}`;
 
-    //configure transporter
-    const transporter = nodemailer.createTransport({
-      service: "Gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+    //Email Content
+    const message = {
+      to: email,
+      from: {
+        name: "Data Canvas",
+        email: process.env.EMAIL_FROM,
       },
-    });
+      subject: "Reset Your Password",
+      html: `<p>Hello,</p>
+      <p>You requested a password reset. Click the link below:</p>
+      <a href="${resetLink}">${resetLink}</a> <p>This link is valid for 15 minutes</p>`,
+    };
 
-    transporter.verify((error, success) => {
-      if (error) {
-        console.log("eror", error);
-      } else {
-        console.log("ok", success);
-      }
-    });
+    await sgMail.send(message);
 
-    await transporter.sendMail({
-      from: '"Data Canvas" <no-reply@DataCanvas.com>',
-      to: user.email,
-      subject: "Password Reset",
-      html: `<p>Click <a href="${resetLink}">here</a> to reset your password.
-      Link expires in 15 mins.</p>`,
-    });
     res.status(201).json({ message: "Reset link sent to email" });
   } catch (err) {
     console.log(err);
