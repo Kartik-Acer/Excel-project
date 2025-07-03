@@ -76,7 +76,6 @@ const Register = () => {
             <label htmlFor="role">Role</label>
             <select name="role" onChange={handleChange}>
               <option value="user">User</option>
-              <option value="admin">Admin</option>
             </select>
           </div>
           <button className="auth-button" type="submit">
