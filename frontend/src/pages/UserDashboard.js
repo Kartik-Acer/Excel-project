@@ -299,10 +299,10 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard">
-      <div className="dashboard-header">
+      {/* <div className="dashboard-header">
         <h1>Dashboard</h1>
         <p>Manage your Excel files and create beautiful visualizations</p>
-      </div>
+      </div> */}
 
       {error && <div className="error-message">{error}</div>}
 

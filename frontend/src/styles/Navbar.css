@@ -1,6 +1,9 @@
 .navbar{
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 10px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -9,14 +12,290 @@
 }
 .logo{
   font-size: 20px;
-  font-weight: bold;
 }
 
-.nav-links a, .logout-btn{ 
-  margin-left: 15px;
+.logo-text {
+  font-size: 24px;
+  font-weight: 700;
   color: white;
+  letter-spacing: 0.5px;
+}
+
+.nav-links{
+  display: flex;
+  align-items: center;
+}
+
+.dashboard-name{
+  font-weight: 600;
+  font-size: 16px
+}
+
+.auth-buttons{
+  display: flex;
+  gap: 10px;
+}
+
+
+.login-button {
+  background: transparent;
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 8px 20px;
+  border-radius: 20px;
   text-decoration: none;
-  background: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.login-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: white;
+}
+
+.signup-button {
+  background: white;
+  color: #764ba2;
   border: none;
+  padding: 8px 20px;
+  border-radius: 20px;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.signup-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+
+.logout-button {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 8px 16px;
+  border-radius: 20px;
   cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-left: 20px;
+  padding-left: 20px;
+  border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+}
+
+.mobile-menu-toggle {
+  display: none;
+  background: transparent;
+  border: none;
+  width: 30px;
+  height: 30px;
+  position: relative;
+  cursor: pointer;
+  z-index: 102;
+  padding: 0;
+}
+
+.menu-icon {
+  position: relative;
+  width: 100%;
+  height: 2px;
+  background: white;
+  display: block;
+  transition: all 0.3s ease;
+}
+
+.menu-icon::before,
+.menu-icon::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.menu-icon::before {
+  top: -8px;
+}
+
+.menu-icon::after {
+  bottom: -8px;
+}
+
+.menu-icon.active {
+  background: transparent;
+}
+
+.menu-icon.active::before {
+  top: 0;
+  transform: rotate(45deg);
+}
+
+.menu-icon.active::after {
+  bottom: 0;
+  transform: rotate(-45deg);
+}
+
+/* Tablet Responsive Design */
+@media (max-width: 1200px) {
+  
+  .navbar-user {
+    margin-left: 15px;
+    padding-left: 15px;
+  }
+ 
+}
+
+@media (max-width: 992px) {
+
+  .navbar-user {
+    gap: 10px;
+    margin-left: 10px;
+    padding-left: 10px;
+  }
+
+  .user-name {
+    font-size: 13px;
+  }
+
+  .user-role {
+    font-size: 11px;
+  }
+
+  .logout-button {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .login-button,
+  .signup-button {
+    padding: 6px 16px;
+    font-size: 13px;
+  }
+  .logo-text {
+    font-size: 22px;
+  }
+  .logo{
+    font-size: 18px;
+  }
+}
+
+/*mb responsive*/
+@media (max-width: 768px) {
+
+  .mobile-menu-toggle {
+    display: block;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 85%;
+    max-width: 250px;
+    height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 80px 30px 30px;
+    transition: right 0.3s ease;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    gap: 25px;
+    z-index: 99;
+    overflow-y: auto;
+
+  }
+
+  .nav-links.active {
+    right: 0;
+  }
+
+
+  .navbar-user {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 0;
+    padding-left: 0;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding-top: 20px;
+    width: 100%;
+    gap: 15px;
+  }
+
+  .user-info {
+    margin-bottom: 10px;
+  }
+
+  .logout-button {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+  }
+
+  .auth-buttons {
+    flex-direction: column;
+    width: 100%;
+    gap: 15px;
+  }
+
+  .login-button,
+  .signup-button {
+    width: 100%;
+    text-align: center;
+    padding: 12px;
+    font-size: 16px;
+  }
+
+  .logo-text {
+    font-size: 20px;
+  }
+  .logo{
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 576px) {
+  .navbar {
+    height: 55px;
+    padding: 0 8px;
+  }
+
+  .logo-text {
+    font-size: 18px;
+  }
+  .logo{
+    font-size: 16px;
+  }
+
+  
+  .nav-links {
+    width: 90%;
+    max-width: 280px;
+    padding: 70px 20px 20px;
+  }
+
 }

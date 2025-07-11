@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://excel-project-backend-mold.onrender.com/api",
+  baseURL: "http://localhost:5000/api",
 });
 //https://excel-project-backend-mold.onrender.com
 //https://excel-project-frontend.onrender.com

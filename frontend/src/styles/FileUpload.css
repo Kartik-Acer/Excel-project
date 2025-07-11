@@ -191,29 +191,246 @@
   border: 1px solid #fcc;
 }
 
-@media (max-width: 768px) {
+/* Tablet Responsive Design */
+@media (max-width: 1200px) {
   .upload-container {
+    max-width: 700px;
     padding: 15px;
   }
 
   .upload-card {
+    padding: 35px;
+  }
+
+  .upload-zone {
+    padding: 50px 30px;
+  }
+}
+
+@media (max-width: 992px) {
+  .upload-card h2 {
+    font-size: 26px;
+  }
+
+  .upload-description {
+    font-size: 15px;
+  }
+
+  .upload-zone {
+    padding: 45px 25px;
+  }
+
+  .upload-icon {
+    font-size: 42px;
+  }
+
+  .upload-zone p {
+    font-size: 15px;
+  }
+
+  .file-select-button {
+    padding: 10px 25px;
+    font-size: 15px;
+  }
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+  .upload-container {
+    padding: 15px;
+    max-width: 100%;
+  }
+
+  .upload-card {
     padding: 25px;
+    border-radius: 10px;
+  }
+
+  .upload-card h2 {
+    font-size: 24px;
+  }
+
+  .upload-description {
+    font-size: 14px;
+    margin-bottom: 25px;
+  }
+
+  .upload-zone {
+    padding: 40px 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+  }
+
+  .upload-icon {
+    font-size: 36px;
+    margin-bottom: 15px;
+  }
+
+  .upload-zone p {
+    font-size: 14px;
+    margin: 8px 0;
+  }
+
+  .file-select-button {
+    padding: 10px 20px;
+    font-size: 14px;
+    border-radius: 20px;
+  }
+
+  .upload-note {
+    font-size: 12px !important;
+  }
+
+  .file-info {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .file-details {
+    text-align: center;
+  }
+
+  .file-name {
+    font-size: 15px;
+  }
+
+  .file-size {
+    font-size: 13px;
+  }
+
+  .file-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .remove-button,
+  .upload-button {
+    width: 100%;
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .upload-features {
+    padding: 20px;
+    margin-top: 25px;
+  }
+
+  .upload-features h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .upload-features li {
+    font-size: 14px;
+    padding: 6px 0;
+  }
+}
+
+@media (max-width: 576px) {
+  .upload-container {
+    padding: 10px;
+  }
+
+  .upload-card {
+    padding: 20px;
+  }
+
+  .upload-card h2 {
+    font-size: 22px;
+  }
+
+  .upload-zone {
+    padding: 30px 15px;
+  }
+
+  .upload-icon {
+    font-size: 32px;
+  }
+
+  .upload-zone p {
+    font-size: 13px;
+  }
+
+  .file-select-button {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+
+  .file-info {
+    padding: 12px;
+  }
+
+  .file-name {
+    font-size: 14px;
+  }
+
+  .remove-button,
+  .upload-button {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .upload-features {
+    padding: 15px;
+  }
+
+  .upload-features h3 {
+    font-size: 15px;
+  }
+
+  .upload-features li {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .upload-card {
+    padding: 15px;
+  }
+
+  .upload-card h2 {
+    font-size: 20px;
+  }
+
+  .upload-description {
+    font-size: 13px;
+  }
+
+  .upload-zone {
+    padding: 25px 10px;
+  }
+
+  .upload-icon {
+    font-size: 28px;
+  }
+
+  .file-select-button {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+
+  .error-message {
+    padding: 12px;
+    font-size: 13px;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .file-select-button,
+  .upload-button,
+  .remove-button {
+    min-height: 44px; /* Minimum touch target size */
   }
 
   .upload-zone {
     padding: 40px 20px;
   }
 
-  .file-info {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .file-actions {
-    flex-direction: column;
-  }
-
-  .file-details {
-    text-align: center;
+  .file-select-button:hover,
+  .upload-button:hover,
+  .remove-button:hover {
+    transform: none; /* Disable hover transforms on touch devices */
   }
 }

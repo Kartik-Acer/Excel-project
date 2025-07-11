@@ -272,35 +272,332 @@
   color: #666;
 }
 
-@media (max-width: 768px) {
+
+/* Tablet Responsive Design (768px - 1200px) */
+@media (max-width: 1200px) {
   .admin-dashboard {
     padding: 15px;
   }
 
+  .admin-header h1 {
+    font-size: 28px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+  }
+
+  .stat-card {
+    padding: 20px;
+  }
+
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 28px;
+  }
+
+  .stat-number {
+    font-size: 24px;
+  }
+
+  .chart-card,
+  .recent-activity,
+  .users-tab {
+    padding: 20px;
+  }
+
+  .users-table {
+    min-width: 600px;
+  }
+
+  .users-table th,
+  .users-table td {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 992px) {
   .admin-header {
     flex-direction: column;
-    gap: 15px;
     text-align: center;
+    gap: 15px;
   }
 
   .admin-tabs {
     justify-content: center;
+    width: 100%;
+  }
+
+  .tab-button {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .activity-item {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    align-items: center;
+  }
+
+  .activity-date {
+    white-space: normal;
+  }
+
+  .chart-card h3,
+  .recent-activity h3 {
+    font-size: 18px;
+  }
+}
+
+/* Mobile Responsive Design (320px - 768px) */
+@media (max-width: 768px) {
+  .admin-dashboard {
+    padding: 10px;
+  }
+
+  .admin-header {
+    margin-bottom: 20px;
+  }
+
+  .admin-header h1 {
+    font-size: 24px;
+  }
+
+  .admin-tabs {
+    flex-direction: column;
+    width: 100%;
+    gap: 8px;
+  }
+
+  .tab-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .overview-tab {
+    gap: 20px;
   }
 
   .stats-grid {
     grid-template-columns: 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
   }
 
   .stat-card {
+    padding: 15px;
     flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+
+  .stat-icon {
+    width: 45px;
+    height: 45px;
+    font-size: 24px;
+  }
+
+  .stat-number {
+    font-size: 20px;
+  }
+
+  .stat-content h3 {
+    font-size: 13px;
+  }
+
+  .chart-card,
+  .recent-activity,
+  .users-tab {
+    padding: 15px;
+  }
+
+  .chart-card h3,
+  .recent-activity h3 {
+    font-size: 16px;
+    margin-bottom: 15px;
+  }
+
+  .activity-item {
+    padding: 12px;
+    flex-direction: column;
+    gap: 8px;
     text-align: center;
   }
 
-  .users-table-container {
+  .activity-info strong {
+    font-size: 14px;
+  }
+
+  .activity-user,
+  .activity-date {
     font-size: 12px;
+  }
+
+  .users-header h3 {
+    font-size: 20px;
+  }
+
+  .users-header p {
+    font-size: 14px;
+  }
+
+  .users-table {
+    min-width: 500px;
+    font-size: 12px;
+  }
+
+  .users-table th,
+  .users-table td {
+    padding: 8px;
   }
 
   .user-actions {
     flex-direction: column;
+    gap: 5px;
+  }
+
+  .action-btn {
+    width: 100%;
+    padding: 8px;
+    font-size: 11px;
+  }
+
+  .status-badge {
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+
+  .empty-state {
+    padding: 40px 15px;
+  }
+
+  .empty-state h3 {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 576px) {
+  .admin-dashboard {
+    padding: 8px;
+  }
+
+  .admin-header h1 {
+    font-size: 22px;
+  }
+
+  .tab-button {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .stat-card {
+    padding: 12px;
+  }
+
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .stat-number {
+    font-size: 18px;
+  }
+
+  .chart-card,
+  .recent-activity,
+  .users-tab {
+    padding: 12px;
+  }
+
+  .activity-item {
+    padding: 10px;
+  }
+
+  .users-table {
+    min-width: 400px;
+    font-size: 11px;
+  }
+
+  .users-table th,
+  .users-table td {
+    padding: 6px;
+  }
+
+  .users-header h3 {
+    font-size: 18px;
+  }
+
+  .loading {
+    height: 300px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-header h1 {
+    font-size: 20px;
+  }
+
+  .tab-button {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .stat-card {
+    padding: 10px;
+  }
+
+  .stat-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 18px;
+  }
+
+  .stat-number {
+    font-size: 16px;
+  }
+
+  .chart-card,
+  .recent-activity,
+  .users-tab {
+    padding: 10px;
+  }
+
+  .users-table {
+    min-width: 350px;
+    font-size: 10px;
+  }
+
+  .users-table th,
+  .users-table td {
+    padding: 4px;
+  }
+
+  .action-btn {
+    padding: 6px;
+    font-size: 10px;
+  }
+
+  .status-badge {
+    padding: 3px 6px;
+    font-size: 9px;
+  }
+
+  .empty-state {
+    padding: 30px 10px;
+  }
+
+  .empty-state h3 {
+    font-size: 16px;
   }
 }
