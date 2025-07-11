@@ -1,11 +1,11 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://excel-project-backend-mold.onrender.com/api",
 });
 //https://excel-project-backend-mold.onrender.com
 //https://excel-project-frontend.onrender.com
-
+//http://localhost:5000/api
 export const register = (data) => API.post("/register", data);
 export const login = (data) => API.post("/login", data);
 export const forgotPassword = (data) => API.post("/forgot-password", data);
