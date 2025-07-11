@@ -1,4 +1,6 @@
-import { useRef } from "react";
+"use client";
+
+import { useRef, useEffect, forwardRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Text } from "@react-three/drei";
 
@@ -24,7 +26,16 @@ const Bar3D = ({ position, height, color }) => {
   );
 };
 
-const ThreeChart = ({ data, config }) => {
+const ThreeChart = forwardRef(({ data, config }, ref) => {
+  const canvasRef = useRef();
+
+  // Expose the canvas ref to parent component
+  useEffect(() => {
+    if (ref && canvasRef.current) {
+      ref.current = canvasRef.current;
+    }
+  }, [ref]);
+
   if (!data || !data.datasets || !data.datasets[0]) {
     return (
       <div
@@ -57,20 +68,41 @@ const ThreeChart = ({ data, config }) => {
   ];
 
   return (
-    <div style={{ height: "500px", width: "100%" }}>
-      <Canvas camera={{ position: [10, 10, 10], fov: 60 }} shadows>
+    <div ref={canvasRef} style={{ height: "500px", width: "100%" }}>
+      <Canvas
+        camera={{ position: [10, 10, 10], fov: 60 }}
+        shadows
+        gl={{
+          preserveDrawingBuffer: true, // Crucial for capturing WebGL content
+          antialias: true,
+          alpha: true, // Keep alpha channel for transparency
+        }}
+        scene={{ background: null }} // Ensure no default background
+        onCreated={({ gl, scene }) => {
+          // Set white background color explicitly
+          gl.setClearColor(0xffffff, 1); // White background with full opacity
+
+          // Ensure the WebGL context preserves the drawing buffer
+          gl.domElement.style.display = "block";
+          gl.domElement.style.visibility = "visible";
+          gl.domElement.style.backgroundColor = "#ffffff"; // CSS fallback
+        }}
+      >
+        {/* Set scene background to white */}
+        <color attach="background" args={["#ffffff"]} />
+
         <ambientLight intensity={0.4} />
         <pointLight position={[10, 10, 10]} castShadow />
         <pointLight position={[-10, -10, -10]} intensity={0.3} />
 
-        {/* Ground plane */}
+        {/* Ground plane with white/light gray color */}
         <mesh
           receiveShadow
           position={[0, -0.1, 0]}
           rotation={[-Math.PI / 2, 0, 0]}
         >
           <planeGeometry args={[20, 20]} />
-          <meshStandardMaterial color="#f0f0f0" />
+          <meshStandardMaterial color="#f8f8f8" />
         </mesh>
 
         {/* 3D Bars */}
@@ -113,6 +145,8 @@ const ThreeChart = ({ data, config }) => {
       </Canvas>
     </div>
   );
-};
+});
+
+ThreeChart.displayName = "ThreeChart";
 
 export default ThreeChart;

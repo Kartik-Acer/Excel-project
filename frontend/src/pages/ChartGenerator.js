@@ -39,6 +39,7 @@ const ChartGenerator = ({ fileId: propFileId }) => {
   const fileId = propFileId || paramFileId;
   const navigate = useNavigate();
   const chartRef = useRef(null);
+  const threeChartRef = useRef(null);
 
   const [fileData, setFileData] = useState(null);
   const [chartConfig, setChartConfig] = useState({
@@ -51,6 +52,7 @@ const ChartGenerator = ({ fileId: propFileId }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     fetchFileData();
@@ -169,41 +171,164 @@ const ChartGenerator = ({ fileId: propFileId }) => {
     }
   };
 
+  // Enhanced download function with 3D chart support
   const downloadChart = async (format) => {
     if (!chartRef.current) return;
 
+    setDownloading(true);
     try {
-      if (format === "png") {
-        const canvas = await html2canvas(chartRef.current);
-        const link = document.createElement("a");
-        link.download = `${chartConfig.title}.png`;
-        link.href = canvas.toDataURL();
-        link.click();
-      } else if (format === "pdf") {
-        const canvas = await html2canvas(chartRef.current);
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new jsPDF();
-        const imgWidth = 210;
-        const pageHeight = 295;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        let heightLeft = imgHeight;
+      let canvas = null;
+      let imgData = null;
 
-        let position = 0;
+      if (chartConfig.type === "3d" && threeChartRef.current) {
+        // Special handling for 3D charts
+        const threeCanvas = threeChartRef.current.querySelector("canvas");
+        if (threeCanvas) {
+          // Create a new canvas to capture the 3D chart
+          const captureCanvas = document.createElement("canvas");
+          const ctx = captureCanvas.getContext("2d");
 
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+          // Set canvas size to match the 3D chart
+          captureCanvas.width = threeCanvas.width;
+          captureCanvas.height = threeCanvas.height;
 
-        while (heightLeft >= 0) {
-          position = heightLeft - imgHeight;
-          pdf.addPage();
-          pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-          heightLeft -= pageHeight;
+          // For WebGL canvas, we need to preserve the drawing buffer
+          const gl =
+            threeCanvas.getContext("webgl") ||
+            threeCanvas.getContext("experimental-webgl");
+          if (gl) {
+            // Read pixels from WebGL context
+            const pixels = new Uint8Array(
+              gl.drawingBufferWidth * gl.drawingBufferHeight * 4
+            );
+            gl.readPixels(
+              0,
+              0,
+              gl.drawingBufferWidth,
+              gl.drawingBufferHeight,
+              gl.RGBA,
+              gl.UNSIGNED_BYTE,
+              pixels
+            );
+
+            // Create ImageData and put it on canvas
+            const imageData = new ImageData(
+              new Uint8ClampedArray(pixels),
+              gl.drawingBufferWidth,
+              gl.drawingBufferHeight
+            );
+
+            // Flip the image vertically (WebGL has inverted Y axis)
+            const flippedCanvas = document.createElement("canvas");
+            flippedCanvas.width = gl.drawingBufferWidth;
+            flippedCanvas.height = gl.drawingBufferHeight;
+            const flippedCtx = flippedCanvas.getContext("2d");
+
+            flippedCtx.putImageData(imageData, 0, 0);
+            flippedCtx.globalCompositeOperation = "copy";
+            flippedCtx.scale(1, -1);
+            flippedCtx.translate(0, -gl.drawingBufferHeight);
+            flippedCtx.drawImage(flippedCanvas, 0, 0);
+
+            canvas = flippedCanvas;
+          } else {
+            // Fallback: try to copy canvas directly
+            ctx.drawImage(threeCanvas, 0, 0);
+            canvas = captureCanvas;
+          }
+        } else {
+          // Fallback to html2canvas for the entire 3D chart container
+          canvas = await html2canvas(threeChartRef.current, {
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: "#ffffff",
+            scale: 2,
+            logging: false,
+            onclone: (clonedDoc) => {
+              // Ensure the cloned canvas is visible
+              const clonedCanvas = clonedDoc.querySelector("canvas");
+              if (clonedCanvas) {
+                clonedCanvas.style.display = "block";
+                clonedCanvas.style.visibility = "visible";
+              }
+            },
+          });
         }
-
-        pdf.save(`${chartConfig.title}.pdf`);
+      } else {
+        // Regular 2D charts
+        canvas = await html2canvas(chartRef.current, {
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: "#ffffff",
+          scale: 2,
+          logging: false,
+        });
       }
+
+      if (!canvas) {
+        throw new Error("Failed to capture chart");
+      }
+
+      imgData = canvas.toDataURL("image/png", 1.0);
+
+      if (format === "png") {
+        // Download PNG
+        const link = document.createElement("a");
+        link.download = `${chartConfig.title
+          .replace(/[^a-z0-9]/gi, "_")
+          .toLowerCase()}.png`;
+        link.href = imgData;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else if (format === "pdf") {
+        // Download PDF
+        const pdf = new jsPDF({
+          orientation: canvas.width > canvas.height ? "landscape" : "portrait",
+          unit: "px",
+          format: [canvas.width, canvas.height],
+        });
+
+        // Calculate dimensions to fit the page
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+
+        // Calculate scaling to fit the page while maintaining aspect ratio
+        const scale = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+        const scaledWidth = imgWidth * scale;
+        const scaledHeight = imgHeight * scale;
+
+        // Center the image on the page
+        const x = (pdfWidth - scaledWidth) / 2;
+        const y = (pdfHeight - scaledHeight) / 2;
+
+        pdf.addImage(
+          imgData,
+          "PNG",
+          x,
+          y,
+          scaledWidth,
+          scaledHeight,
+          undefined,
+          "FAST"
+        );
+        pdf.save(
+          `${chartConfig.title.replace(/[^a-z0-9]/gi, "_").toLowerCase()}.pdf`
+        );
+      }
+
+      // Show success message
+      const formatName = format.toUpperCase();
+      Swal.fire(`Chart downloaded successfully as ${formatName}!`);
     } catch (error) {
-      alert("Failed to download chart");
+      console.error("Download error:", error);
+      Swal.fire(
+        `Failed to download chart as ${format.toUpperCase()}. Please try again.`
+      );
+    } finally {
+      setDownloading(false);
     }
   };
 
@@ -250,7 +375,11 @@ const ChartGenerator = ({ fileId: propFileId }) => {
       case "scatter":
         return <Scatter data={chartData} options={options} />;
       case "3d":
-        return <ThreeChart data={chartData} config={chartConfig} />;
+        return (
+          <div ref={threeChartRef} style={{ width: "100%", height: "100%" }}>
+            <ThreeChart data={chartData} config={chartConfig} />
+          </div>
+        );
       default:
         return <Line data={chartData} options={options} />;
     }
@@ -356,18 +485,33 @@ const ChartGenerator = ({ fileId: propFileId }) => {
               <button
                 onClick={() => downloadChart("png")}
                 className="action-button download"
-                disabled={!chartData}
+                disabled={!chartData || downloading}
               >
-                Download PNG
+                {downloading ? "Downloading..." : "Download PNG"}
               </button>
               <button
                 onClick={() => downloadChart("pdf")}
                 className="action-button download"
-                disabled={!chartData}
+                disabled={!chartData || downloading}
               >
-                Download PDF
+                {downloading ? "Downloading..." : "Download PDF"}
               </button>
             </div>
+            {chartConfig.type === "3d" && (
+              <div className="download-note">
+                <small
+                  style={{
+                    color: "#666",
+                    fontSize: "12px",
+                    marginTop: "10px",
+                    display: "block",
+                  }}
+                >
+                  💡 3D charts use advanced rendering. Download may take a
+                  moment.
+                </small>
+              </div>
+            )}
           </div>
         </div>
 
